@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.hubspot.snapshots</groupId>
+    <artifactId>accelerator-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>accelerator-maven-extension</artifactId>
+
+  <properties>
+    <basepom.check.skip-findbugs>true</basepom.check.skip-findbugs>
+    <basepom.check.skip-checkstyle>true</basepom.check.skip-checkstyle>
+    <basepom.check.skip-duplicate-finder>true</basepom.check.skip-duplicate-finder>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.hubspot.snapshots</groupId>
+      <artifactId>accelerator-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.hubspot.snapshots</groupId>
+      <artifactId>accelerator-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-spi</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-impl</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-util</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
