@@ -8,4 +8,4 @@ database:
   driverClass: org.h2.Driver
   user: user
   password: password
-  url: jdbc:h2:mem:accelerator;database_to_upper=false;DB_CLOSE_DELAY=-1;mode=MySQL
+  url: jdbc:h2:mem:accelerator;DB_CLOSE_DELAY=-1;mode=MySQL
