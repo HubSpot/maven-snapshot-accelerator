@@ -11,6 +11,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.skife.jdbi.v2.Transaction;
+import org.skife.jdbi.v2.TransactionStatus;
+
 import com.hubspot.snapshots.core.SnapshotVersion;
 import com.hubspot.snapshots.core.SnapshotVersionEgg;
 import com.hubspot.snapshots.core.Snapshots;
@@ -35,8 +38,23 @@ public class SnapshotResource {
   }
 
   @POST
-  public void report(SnapshotVersionEgg snapshot) {
-    snapshotDao.save(snapshot);
+  public SnapshotVersion report(final SnapshotVersionEgg snapshot) {
+    int id = snapshotDao.inTransaction(new Transaction<Integer, SnapshotDao>() {
+
+      @Override
+      public Integer inTransaction(SnapshotDao snapshotDao, TransactionStatus status) throws Exception {
+        snapshotDao.delete(snapshot);
+        return snapshotDao.insert(snapshot);
+      }
+    });
+
+    return new SnapshotVersion(
+            id,
+            snapshot.getGroupId(),
+            snapshot.getArtifactId(),
+            snapshot.getBaseVersion(),
+            snapshot.getResolvedVersion()
+    );
   }
 
   private static int nextOffset(List<SnapshotVersion> snapshots, int previous) {

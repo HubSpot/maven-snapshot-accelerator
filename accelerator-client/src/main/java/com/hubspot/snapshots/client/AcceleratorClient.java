@@ -18,14 +18,15 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AcceleratorClient {
-  private static final String SNAPSHOT_URL = snapshotsUrl();
+  private static final String DETECTED_BASE_URL = detectBaseUrl();
+  private static final String REPORT_URL = snapshotsUrl();
 
   private static String snapshotsUrl() {
-    String baseUrl = baseUrl();
+    String baseUrl = detectBaseUrl();
     return baseUrl == null ? null : baseUrl + "/snapshots/delta";
   }
 
-  private static String baseUrl() {
+  private static String detectBaseUrl() {
     String acceleratorUrl = System.getProperty("accelerator.url");
     if (acceleratorUrl != null) {
       return acceleratorUrl;
@@ -34,10 +35,14 @@ public class AcceleratorClient {
     return System.getenv("ACCELERATOR_URL");
   }
 
+  private final String reportUrl;
+  private final String deltaUrl;
   private final OkHttpClient client;
   private final ObjectMapper mapper;
 
-  private AcceleratorClient() {
+  private AcceleratorClient(String baseUrl) {
+    this.reportUrl = baseUrl + "/snapshots";
+    this.deltaUrl = baseUrl + "/snapshots/delta";
     this.client = new OkHttpClient.Builder()
             .followRedirects(false)
             .followSslRedirects(false)
@@ -47,36 +52,45 @@ public class AcceleratorClient {
     this.mapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
   }
 
-  public static AcceleratorClient newInstance() {
-    return new AcceleratorClient();
+  public static AcceleratorClient detectingBaseUrl() {
+    if (DETECTED_BASE_URL == null) {
+      throw new IllegalStateException("Unable to detect base url, set ACCELERATOR_URL environment variable or accelerator.url system property");
+    }
+    return withBaseUrl(DETECTED_BASE_URL);
   }
 
-  public static String snapshotUrl() {
-    return SNAPSHOT_URL;
+  public static AcceleratorClient withBaseUrl(String baseUrl) {
+    return new AcceleratorClient(baseUrl);
+  }
+
+  public static String detectedDeltaUrl() {
+    return DETECTED_BASE_URL + "/snapshots/delta";
   }
 
   public Iterator<SnapshotVersion> getDelta(int offset) {
     return new SnapshotIterator(offset);
   }
 
-  public void report(SnapshotVersionEgg snapshot) throws IOException {
+  public SnapshotVersion report(SnapshotVersionEgg snapshot) throws IOException {
     MediaType mediaTye = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(mediaTye, mapper.writeValueAsString(snapshot));
 
     Request request = new Request.Builder()
-            .url(SNAPSHOT_URL)
+            .url(reportUrl)
             .post(body)
             .build();
 
     Response response = client.newCall(request).execute();
-    if (response.code() != 200 && response.code() != 204) {
+    if (response.code() != 200) {
       throw new IOException("Unexpected response code from accelerator API: " + response.code());
     }
+
+    return mapper.readValue(response.body().byteStream(), SnapshotVersion.class);
   }
 
   private Snapshots getSinglePage(int offset) throws IOException {
     Request request = new Request.Builder()
-            .url(SNAPSHOT_URL + "?offset=" + offset)
+            .url(deltaUrl + "?offset=" + offset)
             .build();
 
     try (Response response = client.newCall(request).execute()) {

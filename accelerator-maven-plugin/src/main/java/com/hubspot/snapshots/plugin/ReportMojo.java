@@ -53,7 +53,7 @@ public class ReportMojo extends AbstractMojo {
     );
 
     try {
-      AcceleratorClient.newInstance().report(snapshot);
+      AcceleratorClient.detectingBaseUrl().report(snapshot);
       getLog().info("Successfully reported to accelerator API");
     } catch (IOException e) {
       if (failOnError) {

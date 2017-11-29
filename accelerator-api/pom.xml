@@ -41,6 +41,10 @@
     </dependency>
     <dependency>
       <groupId>com.hubspot.rosetta</groupId>
+      <artifactId>RosettaCore</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.hubspot.rosetta</groupId>
       <artifactId>RosettaJdbi</artifactId>
     </dependency>
     <dependency>
@@ -58,6 +62,41 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.hubspot.snapshots</groupId>
+      <artifactId>accelerator-client</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

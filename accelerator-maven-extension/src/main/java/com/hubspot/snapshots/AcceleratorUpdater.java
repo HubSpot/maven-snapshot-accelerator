@@ -29,7 +29,7 @@ public enum AcceleratorUpdater {
     int maxId = offset;
     int updated = 0;
     try {
-      Iterator<SnapshotVersion> iter = AcceleratorClient.newInstance().getDelta(offset);
+      Iterator<SnapshotVersion> iter = AcceleratorClient.detectingBaseUrl().getDelta(offset);
       while (iter.hasNext()) {
         SnapshotVersion snapshot = iter.next();
         updateSnapshotInfo(localRepository, snapshot);
@@ -44,7 +44,7 @@ public enum AcceleratorUpdater {
       LOG.info("Accelerator is healthy, will skip snapshot checks based on accelerator metadata");
       return true;
     } catch (Exception e) {
-      LOG.warn("Unable to connect to the accelerator API at {}", AcceleratorClient.snapshotUrl());
+      LOG.warn("Unable to connect to the accelerator API at {}", AcceleratorClient.detectedDeltaUrl());
       LOG.warn("Will need to check for all snapshot updates");
       recordAcceleratorFailure(localRepository, offset, e);
       return false;
