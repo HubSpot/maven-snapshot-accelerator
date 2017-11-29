@@ -19,12 +19,6 @@ import okhttp3.Response;
 
 public class AcceleratorClient {
   private static final String DETECTED_BASE_URL = detectBaseUrl();
-  private static final String REPORT_URL = snapshotsUrl();
-
-  private static String snapshotsUrl() {
-    String baseUrl = detectBaseUrl();
-    return baseUrl == null ? null : baseUrl + "/snapshots/delta";
-  }
 
   private static String detectBaseUrl() {
     String acceleratorUrl = System.getProperty("accelerator.url");
