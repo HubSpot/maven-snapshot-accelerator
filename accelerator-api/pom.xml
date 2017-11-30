@@ -11,7 +11,7 @@
   <artifactId>accelerator-api</artifactId>
 
   <properties>
-    <hubspot.main-class>com.hubspot.accelerator.api.AcceleratorService</hubspot.main-class>
+    <hubspot.main-class>com.hubspot.snapshots.api.AcceleratorService</hubspot.main-class>
   </properties>
 
   <dependencies>
