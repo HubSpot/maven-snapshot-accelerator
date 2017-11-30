@@ -17,3 +17,10 @@ Ultimately, the idea is to have a service that can tell you in a single round-tr
 - The Maven extension which hits the API at the start of a build to find all new snapshots and then short-circuits metadata requests for dependencies that haven't changed.
 
 ## Getting Started
+
+```bash
+curl -L -O https://repo1.maven.org/maven2/com/hubspot/snapshots/accelerator-api/0.2/accelerator-api-0.2-shaded.jar
+curl -L -O https://repo1.maven.org/maven2/com/h2database/h2/1.4.196/h2-1.4.196.jar
+curl -L -O https://raw.githubusercontent.com/HubSpot/maven-snapshot-accelerator/master/accelerator-api/src/test/resources/test.yaml
+java -cp accelerator-api-0.2-shaded.jar:h2-1.4.196.jar com.hubspot.snapshots.api.AcceleratorService server test.yaml
+```
