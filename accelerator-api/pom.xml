@@ -40,6 +40,10 @@
       <artifactId>jdbi</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.hubspot.rosetta</groupId>
       <artifactId>RosettaCore</artifactId>
     </dependency>
@@ -86,11 +90,6 @@
     <dependency>
       <groupId>com.hubspot.snapshots</groupId>
       <artifactId>accelerator-client</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.liquibase</groupId>
-      <artifactId>liquibase-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

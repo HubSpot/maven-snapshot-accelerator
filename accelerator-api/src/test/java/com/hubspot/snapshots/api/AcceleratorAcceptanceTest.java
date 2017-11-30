@@ -25,10 +25,6 @@ import com.hubspot.snapshots.core.SnapshotVersionEgg;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit.DropwizardAppRule;
-import liquibase.Contexts;
-import liquibase.Liquibase;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.resource.ClassLoaderResourceAccessor;
 
 public class AcceleratorAcceptanceTest {
   private static final AtomicInteger SNAPSHOT_COUNTER = new AtomicInteger(0);
@@ -46,11 +42,6 @@ public class AcceleratorAcceptanceTest {
 
     dataSource = RULE.getConfiguration().getDataSourceFactory().build(RULE.getEnvironment().metrics(), "test");
     dataSource.start();
-
-    try (Connection connection = dataSource.getConnection()) {
-      Liquibase liquibase = new Liquibase("schema.sql", new ClassLoaderResourceAccessor(), new JdbcConnection(connection));
-      liquibase.update(new Contexts());
-    }
 
     client = AcceleratorClient.withBaseUrl(String.format("http://localhost:%d/accelerator", RULE.getLocalPort()));
   }

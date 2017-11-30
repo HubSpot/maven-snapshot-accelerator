@@ -6,21 +6,20 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.Configuration;
-import io.dropwizard.db.DataSourceFactory;
 
 public class AcceleratorConfiguration extends Configuration {
 
   @Valid
   @NotNull
-  private DataSourceFactory database = new DataSourceFactory();
+  private AcceleratorDataSourceFactory database = new AcceleratorDataSourceFactory();
 
   @JsonProperty("database")
-  public DataSourceFactory getDataSourceFactory() {
+  public AcceleratorDataSourceFactory getDataSourceFactory() {
     return database;
   }
 
   @JsonProperty("database")
-  public void setDataSourceFactory(DataSourceFactory factory) {
+  public void setDataSourceFactory(AcceleratorDataSourceFactory factory) {
     this.database = factory;
   }
 }
