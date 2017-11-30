@@ -18,9 +18,89 @@ Ultimately, the idea is to have a service that can tell you in a single round-tr
 
 ## Getting Started
 
+### Running the API
+
+The first step is to get the API up and running. We publish a JAR to Maven central with all of the dependencies bundled. The part you need to provide is your JDBC driver and a Dropwizard configuration pointing at the database. For testing, you can use an in-memory database like H2 along with [this](https://github.com/HubSpot/maven-snapshot-accelerator/blob/master/accelerator-api/src/test/resources/test.yaml) Dropwizard configuration (which we use for acceptance testing at build-time). To get the API up and running in this configuration, you need to download the API JAR, the H2 JAR, and the dropwizard configuration:
 ```bash
 curl -L -O https://repo1.maven.org/maven2/com/hubspot/snapshots/accelerator-api/0.3/accelerator-api-0.3-shaded.jar
 curl -L -O https://repo1.maven.org/maven2/com/h2database/h2/1.4.196/h2-1.4.196.jar
 curl -L -O https://raw.githubusercontent.com/HubSpot/maven-snapshot-accelerator/master/accelerator-api/src/test/resources/test.yaml
+```
+
+Then you can run the API (Java 7+ required):
+```bash
 java -cp accelerator-api-0.3-shaded.jar:h2-1.4.196.jar com.hubspot.snapshots.api.AcceleratorService server test.yaml
 ```
+
+Once the server has started up you can access the Dropwizard admin page at `http://localhost:8080/admin/`. From there you can click on the Healthcheck link to make sure that all healthchecks are passing, or click on the Metrics link to get a JSON dump of all metrics. You can also test the snapshot endpoints (examples are written with [HTTPie](https://github.com/jakubroztocil/httpie)):
+
+```bash
+# delta should not return any snapshots
+➜  ~ http localhost:8080/accelerator/snapshots/delta offset==0
+HTTP/1.1 200 OK
+Content-Length: 46
+Content-Type: application/json
+Date: Thu, 30 Nov 2017 20:50:17 GMT
+Vary: Accept-Encoding
+
+{
+    "hasMore": false, 
+    "nextOffset": 0, 
+    "versions": []
+}
+
+# report a new snapshot version to the API
+➜  ~ http post localhost:8080/accelerator/snapshots groupId=com.test artifactId=test baseVersion=0.1-SNAPSHOT resolvedVersion=0.1-20171129.222952-1
+HTTP/1.1 200 OK
+Content-Length: 120
+Content-Type: application/json
+Date: Thu, 30 Nov 2017 20:50:42 GMT
+
+{
+    "artifactId": "test", 
+    "baseVersion": "0.1-SNAPSHOT", 
+    "groupId": "com.test", 
+    "id": 1, 
+    "resolvedVersion": "0.1-20171129.222952-1"
+}
+
+# delta should return the snapshot we reported 
+➜  ~ http localhost:8080/accelerator/snapshots/delta offset==0                                                                                     
+HTTP/1.1 200 OK
+Content-Length: 166
+Content-Type: application/json
+Date: Thu, 30 Nov 2017 20:50:56 GMT
+Vary: Accept-Encoding
+
+{
+    "hasMore": false, 
+    "nextOffset": 1, 
+    "versions": [
+        {
+            "artifactId": "test", 
+            "baseVersion": "0.1-SNAPSHOT", 
+            "groupId": "com.test", 
+            "id": 1, 
+            "resolvedVersion": "0.1-20171129.222952-1"
+        }
+    ]
+}
+
+# delta with an offset of 1 should not return any snapshots
+➜  ~ http localhost:8080/accelerator/snapshots/delta offset==1                                                                                     
+HTTP/1.1 200 OK
+Content-Length: 46
+Content-Type: application/json
+Date: Thu, 30 Nov 2017 20:51:09 GMT
+Vary: Accept-Encoding
+
+{
+    "hasMore": false, 
+    "nextOffset": 1, 
+    "versions": []
+}
+```
+
+#### Setting up the schema
+
+For convenience, the Dropwizard testing configuration tells the app to initialize the schema itself ([here](https://github.com/HubSpot/maven-snapshot-accelerator/blob/fa6decbf7dcca3dfeef00727580a7e9b51bfb790/accelerator-api/src/test/resources/test.yaml#L12)). You can use this same flag for a real deployment, but to do so the API would need to connect to the database as a user with DDL permissions. Instead, it may be preferable to set up the database schema before running the API. The expected schema (found [here](https://github.com/HubSpot/maven-snapshot-accelerator/blob/master/accelerator-api/src/main/resources/schema.sql)) is pretty simple, just a single table with 5 columns. You can initialize this with Liquibase or just create the table manually.
