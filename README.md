@@ -8,12 +8,12 @@ In the CI use-case, the latency between our repository manager and CI server has
 
 ## Design
 
-Ultimately, the idea is to have a service that can tell you in a single round-trip all of the snapshot dependencies that have changed since your previous build, and then use this information to short-circuit requests to the remote repository (if a dependency hasn't published a new snapshot, there's no need to fetch the `maven-metadata.xml` or `maven-metadata.xml.sha1` for it). To make this work, there are three parts:
+Ultimately, the idea is to have a service that can tell you in a single round-trip all of the snapshot dependencies that have changed since your previous build, and then use this information to short-circuit requests to the remote repository (if a dependency hasn't published a new snapshot, there's no need to fetch the `maven-metadata.xml` or `maven-metadata.xml.sha1` for it). If a snapshot has changed, Maven still needs to make multiple round-trips to the remote repository to fetch the new version, so the assumption underlying this design is that only a small percentage of dependencies change between builds. The system is comprised of three parts:
 
 - The API which supports two basic operations: Notify of a new snapshot, and give me all changed snapshots by offset. Right now this expects a SQL DB for persistence, but could be made more pluggable.
 - The Maven plugin which notifies the API after a snapshot has been published to the remote repository. You can add this to your CI script to make sure it happens for all builds, something like: 
 
-`mvn -B deploy com.hubspot.snapshots:accelerator-maven-plugin:0.2:report`
+`mvn -B deploy com.hubspot.snapshots:accelerator-maven-plugin:0.3:report`
 - The Maven extension which hits the API at the start of a build to find all new snapshots and then short-circuits metadata requests for dependencies that haven't changed.
 
 ## Getting Started
