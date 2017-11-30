@@ -16,8 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.hubspot.rosetta.Rosetta;
 import com.hubspot.snapshots.client.AcceleratorClient;
 import com.hubspot.snapshots.core.SnapshotVersion;
 import com.hubspot.snapshots.core.SnapshotVersionEgg;
@@ -42,8 +40,6 @@ public class AcceleratorAcceptanceTest {
 
   @BeforeClass
   public static void setup() throws Exception {
-    Rosetta.getMapper().enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
-
     dataSource = RULE.getConfiguration().getDataSourceFactory().build(RULE.getEnvironment().metrics(), "test");
     dataSource.start();
 

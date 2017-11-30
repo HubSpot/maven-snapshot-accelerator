@@ -45,10 +45,6 @@
     </dependency>
     <dependency>
       <groupId>com.hubspot.rosetta</groupId>
-      <artifactId>RosettaCore</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.hubspot.rosetta</groupId>
       <artifactId>RosettaJdbi</artifactId>
     </dependency>
     <dependency>
@@ -66,10 +62,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
     </dependency>
 
     <dependency>
