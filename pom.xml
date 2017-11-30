@@ -10,7 +10,7 @@
 
   <groupId>com.hubspot.snapshots</groupId>
   <artifactId>accelerator-parent</artifactId>
-  <version>0.3</version>
+  <version>0.4-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -131,8 +131,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <scm>
-    <tag>accelerator-parent-0.3</tag>
-  </scm>
 </project>
