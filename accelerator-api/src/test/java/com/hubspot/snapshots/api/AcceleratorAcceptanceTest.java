@@ -23,6 +23,7 @@ import com.hubspot.snapshots.core.SnapshotVersion;
 import com.hubspot.snapshots.core.SnapshotVersionEgg;
 
 import io.dropwizard.db.ManagedDataSource;
+import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 
@@ -30,8 +31,11 @@ public class AcceleratorAcceptanceTest {
   private static final AtomicInteger SNAPSHOT_COUNTER = new AtomicInteger(0);
 
   @ClassRule
-  public static final DropwizardAppRule<AcceleratorConfiguration> RULE =
-          new DropwizardAppRule<>(AcceleratorService.class, ResourceHelpers.resourceFilePath("test.yaml"));
+  public static final DropwizardAppRule<AcceleratorConfiguration> RULE = new DropwizardAppRule<>(
+          AcceleratorService.class,
+          ResourceHelpers.resourceFilePath("test.yaml"),
+          ConfigOverride.config("server.connector.port", "0")
+  );
 
   private static ManagedDataSource dataSource;
   private static AcceleratorClient client;
